@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Globalization;
 using Microsoft.Data.Sqlite;
+using menu_manager;
+using error_messages;
 
 namespace habit_tracker
 {
@@ -35,14 +37,11 @@ namespace habit_tracker
             bool closeApp = false;
             while (!closeApp)
             {
-                Console.WriteLine("\n\nMAIN MENU");
-                Console.WriteLine("\nWhat would you like to do?");
-                Console.WriteLine("0. Close Application.");
-                Console.WriteLine("1. View All Records.");
-                Console.WriteLine("2. Insert Record.");
-                Console.WriteLine("3. Delete Record.");
-                Console.WriteLine("4. Update Record.");
-                Console.Write("-----------------------------------\n");
+                MenuManager menuManager = new MenuManager();
+                DisplayError displayError = new DisplayError();
+                menuManager.MainMenu();
+
+                
 
                 string choice = Console.ReadLine();
                 switch (choice)
@@ -65,7 +64,7 @@ namespace habit_tracker
                         UpdateRecord();
                         break;
                     default:
-                        Console.WriteLine("Invalid choice, please try again.");
+                        displayError.ErrorMessage("invalid input");
                         break;
                 }
             }
@@ -118,8 +117,7 @@ namespace habit_tracker
         {
             string date = GetDateInput();
 
-            int quantity = GetNumberInput("\n\nPlease insert number of glasses or other measure of your choice " +
-                "(no decimals allowed)\n\n");
+            int quantity = GetNumberInput();
 
             using (var connection = new SqliteConnection(connectionString))
             {
@@ -135,14 +133,18 @@ namespace habit_tracker
 
         private static string GetDateInput()
         {
-            Console.WriteLine("Enter the date (mm-dd-yy):  Press 0 to return to main menu\n");
+            MenuManager menuManager = new MenuManager();
+            DisplayError displayError = new DisplayError();
+
+            menuManager.DateMenu();
+            
             string date = Console.ReadLine();
 
             if (date == "0") GetDateInput();
 
             while (!DateTime.TryParseExact(date, "MM-dd-yy", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
             {
-                Console.WriteLine("Invalid date format. Please enter the date in mm-dd-yy format.");
+                displayError.ErrorMessage("invalid_date");
                 date = Console.ReadLine();
             }
 
@@ -154,7 +156,7 @@ namespace habit_tracker
             Console.Clear();
             ViewAllRecords();
 
-            var recordId = GetNumberInput("\n\nPlease enter the ID of the record you want to delete, or enter 0 to return to the Main Menun\n\n");
+            var recordId = GetNumberInput();
 
             using (var connection = new SqliteConnection(connectionString))
             {
@@ -180,7 +182,7 @@ namespace habit_tracker
             Console.Clear();
             ViewAllRecords();
 
-            var recordId = GetNumberInput("\n\nPlease enter the ID of the record you want to update, or enter 0 to return to the Main Menun\n\n");
+            var recordId = GetNumberInput();
 
             using (var connection = new SqliteConnection(connectionString))
             {
@@ -200,7 +202,7 @@ namespace habit_tracker
 
                 string date = GetDateInput();
 
-                int quantity = GetNumberInput("\n\nPlease insert number of glasses or other measure of your choice (no decimals allowed)\n\n");
+                int quantity = GetNumberInput();
 
                 var tableCmd = connection.CreateCommand();
                 tableCmd.CommandText =
@@ -214,16 +216,20 @@ namespace habit_tracker
 
         }
 
-        internal static int GetNumberInput(string message)
+        internal static int GetNumberInput()
         {
-            Console.WriteLine(message);
+            MenuManager menuManager = new MenuManager();
+            DisplayError displayError = new DisplayError();
+
+            menuManager.WaterMenu();
+
             string input = Console.ReadLine();
 
             if (input == "0") GetUserInput();
 
             while (!int.TryParse(input, out _) || Convert.ToInt32(input) < 0)
             {
-                Console.WriteLine("Invalid input. Please enter a valid number.");
+                displayError.ErrorMessage("invalid_input");
                 input = Console.ReadLine();
             }
 
