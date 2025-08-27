@@ -4,7 +4,7 @@ namespace menu_manager
 {
     public class MenuManager
     {
-        public void MainMenu()
+        public static void MainMenu()
         {
             Console.WriteLine("\n\nMAIN MENU");
             Console.WriteLine("\nWhat would you like to do?");
@@ -16,14 +16,24 @@ namespace menu_manager
             Console.Write("-----------------------------------\n");
         }
 
-        public void DateMenu()
+        public static void DateMenu()
         {
             Console.WriteLine("Enter the date (mm-dd-yy):  Press 0 to return to main menu\n");
         }
 
-        public void WaterMenu()
+        public static void WaterMenu()
         {
             Console.WriteLine("\n\nPlease insert number of glasses or other measure of your choice " + "(no decimals allowed)\n\n");
+        }
+
+        public static void UpdateMenu()
+        {
+            Console.WriteLine("\n\nPlease select the index number of the record you would like to update:  Press 0 to return to main menu\n\n");
+        }
+
+        public static void DeleteMenu()
+        {
+            Console.WriteLine("\n\nPlease select the index number of the record you would like to delete:  Press 0 to return to main menu\n\n");
         }
     }
 }

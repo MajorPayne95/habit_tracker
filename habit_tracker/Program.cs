@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using Microsoft.Data.Sqlite;
 using menu_manager;
 using error_messages;
 using sql_management;
@@ -24,9 +23,8 @@ namespace habit_tracker
             bool closeApp = false;
             while (!closeApp)
             {
-                MenuManager menuManager = new MenuManager();
                 DisplayError displayError = new DisplayError();
-                menuManager.MainMenu();
+                MenuManager.MainMenu();
 
                 string choice = Console.ReadLine();
                 switch (choice)
@@ -40,13 +38,15 @@ namespace habit_tracker
                         SQLRead.ViewAllRecords(connectionString);
                         break;
                     case "2":
-                        InsertNewRecord();
+                        SQLCreate.CreateRecord(connectionString);
+                        //InsertNewRecord();
                         break;
                     case "3":
-                        DeleteRecord();
+                        SQLDelete.DeleteRecord(connectionString);
+                        //DeleteRecord();
                         break;
                     case "4":
-                        UpdateRecord();
+                        SQLUpdate.UpdateRecord(connectionString);
                         break;
                     default:
                         displayError.ErrorMessage("invalid input");
@@ -55,30 +55,12 @@ namespace habit_tracker
             }
         }
 
-        private static void InsertNewRecord()
-        {
-            string date = GetDateInput();
-
-            int quantity = GetNumberInput();
-
-            using (var connection = new SqliteConnection(connectionString))
-            {
-                connection.Open();
-                var tableCmd = connection.CreateCommand();
-                tableCmd.CommandText =
-                    $"INSERT INTO drinking_water(Data, Quantity) VALUES ('{date}', {quantity});";
-                tableCmd.ExecuteNonQuery();
-                Console.WriteLine("Record inserted successfully.\n");
-            }
-            GetUserInput();
-        }
-
-        private static string GetDateInput()
+        public static string GetDateInput()
         {
             MenuManager menuManager = new MenuManager();
             DisplayError displayError = new DisplayError();
 
-            menuManager.DateMenu();
+            MenuManager.DateMenu();
 
             string date = Console.ReadLine();
 
@@ -93,77 +75,10 @@ namespace habit_tracker
             return date;
         }
 
-        private static void DeleteRecord()
-        {
-            Console.Clear();
-            ViewAllRecords();
-
-            var recordId = GetNumberInput();
-
-            using (var connection = new SqliteConnection(connectionString))
-            {
-                connection.Open();
-                var tableCmd = connection.CreateCommand();
-
-                tableCmd.CommandText =
-                    $"DELETE FROM drinking_water WHERE Id = {recordId};";
-
-                int rowCount = tableCmd.ExecuteNonQuery();
-
-                if (rowCount == 0)
-                {
-                    Console.WriteLine($"No record found with the ID {recordId}.\n\n");
-                    DeleteRecord();
-                }
-            }
-            Console.WriteLine($"Record {recordId} deleted successfully.\n");
-        }
-
-        private static void UpdateRecord()
-        {
-            Console.Clear();
-            ViewAllRecords();
-
-            var recordId = GetNumberInput();
-
-            using (var connection = new SqliteConnection(connectionString))
-            {
-                connection.Open();
-
-                var checkDmd = connection.CreateCommand();
-                checkDmd.CommandText =
-                    $"SELECT COUNT(*) FROM drinking_water WHERE Id = {recordId};";
-                int checkQuery = Convert.ToInt32(checkDmd.ExecuteScalar());
-
-                if (checkQuery == 0)
-                {
-                    Console.WriteLine($"No record found with the ID {recordId}.\n\n");
-                    connection.Close();
-                    UpdateRecord();
-                }
-
-                string date = GetDateInput();
-
-                int quantity = GetNumberInput();
-
-                var tableCmd = connection.CreateCommand();
-                tableCmd.CommandText =
-                    $"UPDATE drinking_water SET Data = '{date}', Quantity = {quantity} WHERE Id = {recordId};";
-
-                tableCmd.ExecuteNonQuery();
-
-                connection.Close();
-            }
-
-
-        }
-
-        internal static int GetNumberInput()
+        public static int GetNumberInput()
         {
             MenuManager menuManager = new MenuManager();
             DisplayError displayError = new DisplayError();
-
-            menuManager.WaterMenu();
 
             string input = Console.ReadLine();
 

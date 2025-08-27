@@ -1,6 +1,8 @@
 using System;
 using System.Globalization;
 using Microsoft.Data.Sqlite;
+using habit_tracker;
+using menu_manager;
 
 namespace sql_management
 {
@@ -11,7 +13,8 @@ namespace sql_management
             Console.Clear();
             SQLRead.ViewAllRecords(connectionString);
 
-            var recordId = GetNumberInput();
+            MenuManager.DeleteMenu();
+            var recordId = Program.GetNumberInput();
 
             using (var connection = new SqliteConnection(connectionString))
             {
@@ -30,5 +33,5 @@ namespace sql_management
                 }
             }
         }
-    }
+    }  
 }
