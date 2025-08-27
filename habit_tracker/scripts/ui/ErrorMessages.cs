@@ -4,7 +4,7 @@ namespace error_messages
 {
     public class DisplayError
     {
-        public void ErrorMessage(string error)
+        public static void ErrorMessage(string error)
         {
             switch (error)
             {

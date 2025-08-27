@@ -5,7 +5,7 @@ namespace sql_management
 {
     public class SQLGenerator
     {
-        public void GenerateSQL(string connectionString)
+        public static void GenerateSQL(string connectionString)
         {
             using (var connection = new SqliteConnection(connectionString))
             {

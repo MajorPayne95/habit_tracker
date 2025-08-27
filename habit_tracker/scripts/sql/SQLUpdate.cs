@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using Microsoft.Data.Sqlite;
 using habit_tracker;
 using menu_manager;
@@ -14,7 +13,7 @@ namespace sql_management
             SQLRead.ViewAllRecords(connectionString);
             
             MenuManager.UpdateMenu();
-            var recordId = Program.GetNumberInput();
+            var recordId = Convert.ToInt32(InputManager.GetUserInput());
 
             using (var connection = new SqliteConnection(connectionString))
             {
@@ -33,10 +32,10 @@ namespace sql_management
                 }
 
                 MenuManager.DateMenu();
-                string date = Program.GetDateInput();
+                string date = InputManager.GetDateInput();
 
                 MenuManager.WaterMenu();
-                int quantity = Program.GetNumberInput();
+                int quantity = Convert.ToInt32(InputManager.GetUserInput());
 
                 var tableCmd = connection.CreateCommand();
                 tableCmd.CommandText =
@@ -46,8 +45,6 @@ namespace sql_management
 
                 connection.Close();
             }
-
-
         }
     }  
 }

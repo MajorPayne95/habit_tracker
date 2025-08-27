@@ -10,9 +10,9 @@ namespace sql_management
     {
         public static void CreateRecord(string connectionString)
         {
-            string date = Program.GetDateInput();
+            string date = InputManager.GetDateInput();
             MenuManager.WaterMenu();
-            int quantity = Program.GetNumberInput();
+            int quantity = Convert.ToInt32(InputManager.GetUserInput());
 
             using (var connection = new SqliteConnection(connectionString))
             {
