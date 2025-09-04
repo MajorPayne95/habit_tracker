@@ -1,5 +1,4 @@
 using System;
-using Microsoft.Data.Sqlite;
 using habit_tracker;
 using menu_manager;
 
@@ -10,41 +9,27 @@ namespace sql_management
         public static void UpdateRecord(string connectionString)
         {
             Console.Clear();
-            SQLRead.ViewAllRecords(connectionString);
+            SQLRead sqlRead = new SQLRead(connectionString);
+            sqlRead.ViewAllRecords();
             
             MenuManager.UpdateMenu();
             var recordId = Convert.ToInt32(InputManager.GetUserInput());
 
-            using (var connection = new SqliteConnection(connectionString))
-            {
-                connection.Open();
+            MenuManager.DateMenu();
+            string date = InputManager.GetDateInput();
 
-                var checkDmd = connection.CreateCommand();
-                checkDmd.CommandText =
-                    $"SELECT COUNT(*) FROM drinking_water WHERE Id = {recordId};";
-                int checkQuery = Convert.ToInt32(checkDmd.ExecuteScalar());
+            MenuManager.WaterMenu();
+            int quantity = Convert.ToInt32(InputManager.GetUserInput());
 
-                if (checkQuery == 0)
-                {
-                    Console.WriteLine($"No record found with the ID {recordId}.\n\n");
-                    connection.Close();
-                    UpdateRecord(connectionString);
+            SQLDatabaseHelper.ExecuteNonQuery(
+                connectionString,
+                $"UPDATE drinking_water SET Data = @Date, Quantity = @Quantity WHERE Id =@Id;",
+                cmd => {
+                    cmd.Parameters.AddWithValue("@Id", recordId);
+                    cmd.Parameters.AddWithValue("@Date", date);
+                    cmd.Parameters.AddWithValue("@Quantity", quantity);
                 }
-
-                MenuManager.DateMenu();
-                string date = InputManager.GetDateInput();
-
-                MenuManager.WaterMenu();
-                int quantity = Convert.ToInt32(InputManager.GetUserInput());
-
-                var tableCmd = connection.CreateCommand();
-                tableCmd.CommandText =
-                    $"UPDATE drinking_water SET Data = '{date}', Quantity = {quantity} WHERE Id = {recordId};";
-
-                tableCmd.ExecuteNonQuery();
-
-                connection.Close();
-            }
+            );
         }
     }  
 }

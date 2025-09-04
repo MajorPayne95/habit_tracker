@@ -1,5 +1,4 @@
 using System;
-using Microsoft.Data.Sqlite;
 using habit_tracker;
 using menu_manager;
 
@@ -10,27 +9,17 @@ namespace sql_management
         public static void DeleteRecord(string connectionString)
         {
             Console.Clear();
-            SQLRead.ViewAllRecords(connectionString);
+            SQLRead sqlRead = new SQLRead(connectionString);
+            sqlRead.ViewAllRecords();
 
             MenuManager.DeleteMenu();
             var recordId = Convert.ToInt32(InputManager.GetUserInput());
 
-            using (var connection = new SqliteConnection(connectionString))
-            {
-                connection.Open();
-                var tableCmd = connection.CreateCommand();
-
-                tableCmd.CommandText =
-                    $"DELETE FROM drinking_water WHERE Id = {recordId};";
-
-                int rowCount = tableCmd.ExecuteNonQuery();
-
-                if (rowCount == 0)
-                {
-                    Console.WriteLine($"No record found with the ID {recordId}.\n\n");
-                    DeleteRecord(connectionString);
-                }
-            }
+            SQLDatabaseHelper.ExecuteNonQuery(
+                connectionString,
+                $"DELETE FROM drinking_water WHERE Id = @Id;",
+                cmd => cmd.Parameters.AddWithValue("@Id", recordId)
+            );
         }
     }  
 }

@@ -1,4 +1,6 @@
 using System;
+using System.Globalization;
+using models;
 
 namespace menu_manager
 {
@@ -6,6 +8,7 @@ namespace menu_manager
     {
         public static void MainMenu()
         {
+            Console.Clear();
             Console.WriteLine("\n\nMAIN MENU");
             Console.WriteLine("\nWhat would you like to do?");
             Console.WriteLine("0. Close Application.");
@@ -34,6 +37,22 @@ namespace menu_manager
         public static void DeleteMenu()
         {
             Console.WriteLine("\n\nPlease select the index number of the record you would like to delete:  Press 0 to return to main menu\n\n");
+        }
+
+        public static void PrintTableData(List<DrinkingWater> tableData)
+        {
+            Console.WriteLine("------------------------------------");
+            foreach (var dw in tableData)
+            {
+                Console.WriteLine($"{dw.Id} - {dw.Date:MMM-dd-yyyy} - Quantity: {dw.Quantity}");
+            }
+            Console.WriteLine("------------------------------------");
+        }
+
+        public static void ExitPage()
+        {
+            Console.WriteLine("\nPress any key to return to main menu....\n");
+            Console.ReadKey();
         }
     }
 }

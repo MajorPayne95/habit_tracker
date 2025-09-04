@@ -7,13 +7,14 @@ namespace habit_tracker
 {
     class Program
     {
-        static string connectionString = @"Data Source=habit-Tracker.db";
+        static readonly string connectionString = @"Data Source=habit-Tracker.db";
 
-        static void Main(string[] args)
+        static void Main()
         {
             SQLGenerator.GenerateSQL(connectionString);
             MenuManager.MainMenu();
-            
+            SQLRead sqlReader = new SQLRead(connectionString);
+
             bool closeApp = false;
             while (!closeApp)
             {
@@ -29,7 +30,8 @@ namespace habit_tracker
                         Environment.Exit(0);
                         break;
                     case "1":
-                        SQLRead.ViewAllRecords(connectionString);
+                        sqlReader.ViewAllRecords();
+                        MenuManager.ExitPage();
                         break;
                     case "2":
                         SQLCreate.CreateRecord(connectionString);
