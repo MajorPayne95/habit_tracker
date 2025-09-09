@@ -36,7 +36,8 @@ namespace sql_management
                     @"CREATE TABLE IF NOT EXISTS habits (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
                         Name TEXT NOT NULL,
-                        Type TEXT NOT NULL
+                        Type TEXT NOT NULL,
+                        TableName TEXT NOT NULL UNIQUE
                         );";
 
                 tableCmd.ExecuteNonQuery();

@@ -23,7 +23,7 @@ namespace sql_management
 
             SQLDatabaseHelper.ExecuteNonQuery(
                 connectionString,
-                $"UPDATE drinking_water SET Data = @Date, Quantity = @Quantity WHERE Id =@Id;",
+                $"UPDATE [{tableName}] SET Data = @Date, Quantity = @Quantity WHERE Id =@Id;",
                 cmd =>
                 {
                     cmd.Parameters.AddWithValue("@Id", recordId);

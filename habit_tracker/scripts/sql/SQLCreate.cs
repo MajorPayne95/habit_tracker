@@ -6,7 +6,7 @@ namespace sql_management
 {
     public class SQLCreate
     {
-        public static void CreateRecord(string connectionString)
+        public static void CreateRecord(string connectionString, string tableName)
         {
             Console.Clear();
             MenuManager.DateMenu();
@@ -16,7 +16,7 @@ namespace sql_management
 
             SQLDatabaseHelper.ExecuteNonQuery(
                 connectionString,
-                $"INSERT INTO drinking_water(Data, Quantity) VALUES (@Date, @Quantity);",
+                $"INSERT INTO [{tableName}](Data, Quantity) VALUES (@Date, @Quantity);",
                 cmd =>
                 {
                     cmd.Parameters.AddWithValue("@Date", date);
@@ -32,17 +32,20 @@ namespace sql_management
             string name = InputManager.GetHabitInput();
             MenuManager.HabitTypeMenu();
             string type = InputManager.GetHabitInput();
+
+            string tableName = SQLDatabaseHelper.GenerateTableName(name);
+
             SQLDatabaseHelper.ExecuteNonQuery(
                 connectionString,
-                $"INSERT INTO habits(Name, Type) VALUES (@Name, @Type);",
+                $"INSERT INTO habits(Name, Type, TableName) VALUES (@name, @type, @tableName);",
                 cmd =>
                 {
-                    cmd.Parameters.AddWithValue("@Name", name);
-                    cmd.Parameters.AddWithValue("@Type", type);
-                    //cmd.Parameters.AddWithValue("@Quantity", quantity);
+                    cmd.Parameters.AddWithValue("@name", name);
+                    cmd.Parameters.AddWithValue("@type", type);
+                    cmd.Parameters.AddWithValue("@tableName", tableName);
                 }
             );
-            SQLGenerator.GenerateSQLTable(connectionString, name);
+            SQLGenerator.GenerateSQLTable(connectionString, tableName);
         }
     }  
 }

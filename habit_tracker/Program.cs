@@ -1,27 +1,24 @@
 ﻿using System;
 using menu_manager;
-using error_messages;
 using sql_management;
+using error_messages;
 
 namespace habit_tracker
 {
     class Program
     {
-        static readonly string connectionString = @"Data Source=habit-Tracker.db";
+        static readonly string connectionString = @"Data Source=habit-Tracker2.db";
 
         static void Main()
         {
             SQLGenerator.GenerateHabitTable(connectionString);
-            //SQLGenerator.GenerateSQL(connectionString);
 
-            MenuManager.MainMenu();
             SQLRead sqlReader = new SQLRead(connectionString);
-
             bool closeApp = false;
+
             while (!closeApp)
             {
                 MenuManager.MainMenu();
-
                 string? choice = InputManager.GetUserInput();
 
                 switch (choice)
@@ -29,25 +26,28 @@ namespace habit_tracker
                     case "0":
                         Console.WriteLine("Closing application...\n");
                         closeApp = true;
-                        Environment.Exit(0);
                         break;
+
                     case "1":
-                        sqlReader.ViewAllHabits();
-                        MenuManager.EnterHabit();
-                        var selection = InputManager.GetHabitSelection();
-                        DisplayHabitRecords(connectionString, selection);
+                        string? tableName = HabitSelector.GetTableNameFromUserSelection(sqlReader);
+                        if (tableName != null)
+                            DisplayHabitRecords(connectionString, tableName);
                         break;
+
                     case "2":
                         SQLCreate.CreateHabit(connectionString);
                         break;
+
                     case "3":
                         SQLUpdate.UpdateHabit(connectionString);
                         break;
+
                     case "4":
                         SQLDelete.DeleteHabit(connectionString);
                         break;
+
                     default:
-                        DisplayError.ErrorMessage("invalid input");
+                        DisplayError.ErrorMessage("invalid_choice");
                         break;
                 }
             }
@@ -55,21 +55,23 @@ namespace habit_tracker
 
         public static void DisplayHabitRecords(string connectionString, string tableName)
         {
-            MenuManager.HabitMenu();
             SQLRead sqlReader = new SQLRead(connectionString);
 
-            string? choice = InputManager.GetUserInput();
+            while (true)
+            {
+                MenuManager.HabitMenu();
+                string? choice = InputManager.GetUserInput();
 
-            switch (choice)
+                switch (choice)
                 {
                     case "0":
-                        MenuManager.MainMenu();
-                        break;
+                        return; // Return to main menu
                     case "1":
                         sqlReader.ViewAllRecords(tableName);
+                        Console.ReadLine(); // Pause to let user read records
                         break;
                     case "2":
-                        SQLCreate.CreateRecord(connectionString);
+                        SQLCreate.CreateRecord(connectionString, tableName);
                         break;
                     case "3":
                         SQLUpdate.UpdateRecord(connectionString, tableName);
@@ -78,9 +80,10 @@ namespace habit_tracker
                         SQLDelete.DeleteRecord(connectionString, tableName);
                         break;
                     default:
-                        DisplayError.ErrorMessage("invalid input");
+                        DisplayError.ErrorMessage("invalid_choice");
                         break;
                 }
+            }
         }
     }
 }

@@ -49,8 +49,17 @@ namespace sql_management
                 parameterize?.Invoke(command);
 
                 return command.ExecuteNonQuery();
-                // Returns number of rows affected
             }
+        }
+
+        public static string GenerateTableName(string habitName)
+        {
+            string safe = new string(habitName
+                .ToLower()
+                .Replace(' ', '_')
+                .ToCharArray());
+            safe = System.Text.RegularExpressions.Regex.Replace(safe, @"[^a-z0-9_]", "");
+            return $"habit_{safe}_{Guid.NewGuid().ToString("N").Substring(0, 8)}";
         }
     }
 

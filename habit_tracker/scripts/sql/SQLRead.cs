@@ -37,6 +37,7 @@ namespace sql_management
                     Id = reader.GetInt32(0),
                     Name = reader.GetString(1),
                     Type = reader.GetString(2),
+                    TableName = reader.GetString(3)
                 }
             );
         }

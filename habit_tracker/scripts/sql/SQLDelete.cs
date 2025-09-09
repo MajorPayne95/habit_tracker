@@ -17,7 +17,7 @@ namespace sql_management
 
             SQLDatabaseHelper.ExecuteNonQuery(
                 connectionString,
-                $"DELETE FROM drinking_water WHERE Id = @Id;",
+                $"DELETE FROM [{tableName}] WHERE Id = @Id;",
                 cmd => cmd.Parameters.AddWithValue("@Id", recordId)
             );
         }
