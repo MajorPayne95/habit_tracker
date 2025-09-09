@@ -1,5 +1,6 @@
 using System.Globalization;
 using error_messages;
+using menu_manager;
 
 namespace habit_tracker
 {
@@ -31,6 +32,34 @@ namespace habit_tracker
             }
 
             return date;
+        }
+
+        public static string GetHabitInput()
+        {
+            string? name = Console.ReadLine();
+
+            while (string.IsNullOrWhiteSpace(name))
+            {
+                DisplayError.ErrorMessage("invalid_input");
+                name = Console.ReadLine();
+            }
+
+            return name;
+        }
+
+        public static string GetHabitSelection()
+        {
+            string? choice = Console.ReadLine();
+
+            while (string.IsNullOrWhiteSpace(choice))
+            {
+                DisplayError.ErrorMessage("invalid_input");
+                choice = Console.ReadLine();
+            }
+
+            if (choice == "0") MenuManager.MainMenu();
+ 
+            return choice;
         }
     }
 }

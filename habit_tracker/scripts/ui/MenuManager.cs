@@ -9,14 +9,42 @@ namespace menu_manager
         public static void MainMenu()
         {
             Console.Clear();
-            Console.WriteLine("\n\nMAIN MENU");
+            Console.WriteLine("\n\nHABIT TRACKER");
             Console.WriteLine("\nWhat would you like to do?");
             Console.WriteLine("0. Close Application.");
+            Console.WriteLine("1. View Existing Habits.");
+            Console.WriteLine("2. Create New Habit.");
+            Console.WriteLine("3. Update Existing Habit.");
+            Console.WriteLine("4. Delete Existing Habit.");
+            Console.Write("-----------------------------------\n");
+        }
+
+        public static void HabitMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("\n\nHabit Menu");
+            Console.WriteLine("\nWhat would you like to do?");
+            Console.WriteLine("0. Return to Main Menu.");
             Console.WriteLine("1. View All Records.");
             Console.WriteLine("2. Insert Record.");
             Console.WriteLine("3. Delete Record.");
             Console.WriteLine("4. Update Record.");
             Console.Write("-----------------------------------\n");
+        }
+
+        public static void EnterHabit()
+        {
+            Console.WriteLine("\n\nEnter Habit name to access database.  Press 0 to return to main menu\n\n");
+        }
+
+        public static void HabitNameMenu()
+        {
+            Console.WriteLine("Enter the name of the habit you would like to track:  Press 0 to return to main menu\n");
+        }
+
+        public static void HabitTypeMenu()
+        {
+            Console.WriteLine("Enter the unit of measurement for your habit to track (e.g., oz, lbs, cups, gal):  Press 0 to return to main menu\n");
         }
 
         public static void DateMenu()
@@ -47,12 +75,6 @@ namespace menu_manager
                 Console.WriteLine($"{dw.Id} - {dw.Date:MMM-dd-yyyy} - Quantity: {dw.Quantity}");
             }
             Console.WriteLine("------------------------------------");
-        }
-
-        public static void ExitPage()
-        {
-            Console.WriteLine("\nPress any key to return to main menu....\n");
-            Console.ReadKey();
-        }
+        }        
     }
 }

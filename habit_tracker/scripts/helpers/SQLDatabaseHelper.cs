@@ -27,7 +27,7 @@ namespace sql_management
                     while (reader.Read())
                     {
                         results.Add(mapFunction(reader));
-                        Console.WriteLine($"{reader.GetInt32(0)} | {reader.GetString(1)} | {reader.GetInt32(2)}");
+                        Console.WriteLine($"{reader.GetInt32(0)} | {reader.GetString(1)} | {reader.GetString(2)}");
                     }
                     return results;
                 }

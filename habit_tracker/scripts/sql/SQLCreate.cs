@@ -24,5 +24,25 @@ namespace sql_management
                 }
             );
         }
+
+        public static void CreateHabit(string connectionString)
+        {
+            Console.Clear();
+            MenuManager.HabitNameMenu();
+            string name = InputManager.GetHabitInput();
+            MenuManager.HabitTypeMenu();
+            string type = InputManager.GetHabitInput();
+            SQLDatabaseHelper.ExecuteNonQuery(
+                connectionString,
+                $"INSERT INTO habits(Name, Type) VALUES (@Name, @Type);",
+                cmd =>
+                {
+                    cmd.Parameters.AddWithValue("@Name", name);
+                    cmd.Parameters.AddWithValue("@Type", type);
+                    //cmd.Parameters.AddWithValue("@Quantity", quantity);
+                }
+            );
+            SQLGenerator.GenerateSQLTable(connectionString, name);
+        }
     }  
 }
