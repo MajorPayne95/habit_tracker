@@ -18,7 +18,7 @@ namespace habit_tracker
             Console.WriteLine("\nAvailable Habits:");
             for (int i = 0; i < habits.Count; i++)
             {
-                Console.WriteLine($"{i + 1}: {habits[i].Name}");
+                Console.WriteLine($"{i + 1}: {habits[i].Name} - Unit: {habits[i].Type}");
             }
 
             Console.WriteLine("\nSelect a habit by number (0 to return to main menu): ");

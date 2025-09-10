@@ -22,7 +22,8 @@ namespace sql_management
                     {
                         Id = reader.GetInt32(0),
                         Date = DateTime.Parse(reader.GetString(1)),
-                        Quantity = reader.GetInt32(2)
+                        Quantity = reader.GetInt32(2),
+                        Type = reader.IsDBNull(3) ? null : reader.GetString(3)
                     }
                 );
         }

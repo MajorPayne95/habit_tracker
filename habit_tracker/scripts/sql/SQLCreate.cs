@@ -14,13 +14,16 @@ namespace sql_management
             MenuManager.WaterMenu();
             int quantity = Convert.ToInt32(InputManager.GetUserInput());
 
+            string type = SQLDatabaseHelper.GetHabitType(connectionString, tableName) ?? "units";
+
             SQLDatabaseHelper.ExecuteNonQuery(
                 connectionString,
-                $"INSERT INTO [{tableName}](Data, Quantity) VALUES (@Date, @Quantity);",
+                $"INSERT INTO [{tableName}](Date, Quantity, Type) VALUES (@Date, @Quantity, @type);",
                 cmd =>
                 {
                     cmd.Parameters.AddWithValue("@Date", date);
                     cmd.Parameters.AddWithValue("@Quantity", quantity);
+                    cmd.Parameters.AddWithValue("@type", type);
                 }
             );
         }

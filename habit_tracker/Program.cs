@@ -7,11 +7,12 @@ namespace habit_tracker
 {
     class Program
     {
-        static readonly string connectionString = @"Data Source=habit-Tracker2.db";
+        static readonly string connectionString = @"Data Source=habit-Tracker.db";
 
         static void Main()
         {
             SQLGenerator.GenerateHabitTable(connectionString);
+            DatabaseSeeder.Seed(connectionString);
 
             SQLRead sqlReader = new SQLRead(connectionString);
             bool closeApp = false;

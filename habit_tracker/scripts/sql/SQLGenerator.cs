@@ -16,7 +16,8 @@ namespace sql_management
                     $@"CREATE TABLE IF NOT EXISTS [{tableName}] (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
                         Data TEXT,
-                        Quantity INTEGER
+                        Quantity INTEGER,
+                        Type TEXT
                         );";
 
                 tableCmd.ExecuteNonQuery();

@@ -72,7 +72,7 @@ namespace menu_manager
             Console.WriteLine("------------------------------------");
             foreach (var dw in tableData)
             {
-                Console.WriteLine($"{dw.Id} - {dw.Date:MMM-dd-yyyy} - Quantity: {dw.Quantity}");
+                Console.WriteLine($"{dw.Id} - {dw.Date:MMM-dd-yyyy} - Quantity: {dw.Quantity}, Type: {dw.Type}");
             }
             Console.WriteLine("------------------------------------");
         }        
