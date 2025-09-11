@@ -1,6 +1,7 @@
 using System;
 using habit_tracker;
 using menu_manager;
+using error_messages;
 
 namespace sql_management
 {
@@ -14,6 +15,7 @@ namespace sql_management
 
             MenuManager.UpdateMenu();
             var recordId = Convert.ToInt32(InputManager.GetUserInput());
+            if (recordId == 0) return;
 
             MenuManager.DateMenu();
             string date = InputManager.GetDateInput();
@@ -21,18 +23,26 @@ namespace sql_management
             MenuManager.WaterMenu();
             int quantity = Convert.ToInt32(InputManager.GetUserInput());
 
-            SQLDatabaseHelper.ExecuteNonQuery(
-                connectionString,
-                $"UPDATE [{tableName}] SET Date = @Date, Quantity = @Quantity WHERE Id =@Id;",
-                cmd =>
-                {
-                    cmd.Parameters.AddWithValue("@Id", recordId);
-                    cmd.Parameters.AddWithValue("@Date", date);
-                    cmd.Parameters.AddWithValue("@Quantity", quantity);
-                }
-            );
+            try
+            {
+                SQLDatabaseHelper.ExecuteNonQuery(
+                    connectionString,
+                    $"UPDATE [{tableName}] SET date = @Date, quantity = @Quantity WHERE Id =@Id;",
+                    cmd =>
+                    {
+                        cmd.Parameters.AddWithValue("@Id", recordId);
+                        cmd.Parameters.AddWithValue("@Date", date);
+                        cmd.Parameters.AddWithValue("@Quantity", quantity);
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                DisplayError.ErrorMessage("An error occurred while updating the record: " + ex.Message);
+                throw;
+            }
         }
-        
+
         public static void UpdateHabit(string connectionString)
         {
             Console.Clear();
@@ -41,6 +51,7 @@ namespace sql_management
 
             MenuManager.UpdateMenu();
             var habitId = Convert.ToInt32(InputManager.GetUserInput());
+            if (habitId == 0) return;
 
             MenuManager.HabitNameMenu();
             string habitName = InputManager.GetHabitInput();
@@ -48,16 +59,24 @@ namespace sql_management
             MenuManager.HabitTypeMenu();
             string habitType = InputManager.GetHabitInput();
 
-            SQLDatabaseHelper.ExecuteNonQuery(
-                connectionString,
-                $"UPDATE habits SET Name = @Name, Type = @Type WHERE Id =@Id;",
-                cmd =>
-                {
-                    cmd.Parameters.AddWithValue("@Id", habitId);
-                    cmd.Parameters.AddWithValue("@Name", habitName);
-                    cmd.Parameters.AddWithValue("@Type", habitType);
-                }
-            );
+            try
+            {
+                SQLDatabaseHelper.ExecuteNonQuery(
+                    connectionString,
+                    $"UPDATE habits SET name = @Name, type = @Type WHERE Id =@Id;",
+                    cmd =>
+                    {
+                        cmd.Parameters.AddWithValue("@Id", habitId);
+                        cmd.Parameters.AddWithValue("@Name", habitName);
+                        cmd.Parameters.AddWithValue("@Type", habitType);
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                DisplayError.ErrorMessage("An error occurred while updating the habit: " + ex.Message);
+                throw;
+            }
         }
-    }  
+    }
 }

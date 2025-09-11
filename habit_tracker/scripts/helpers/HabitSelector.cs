@@ -1,5 +1,4 @@
 using sql_management;
-using menu_manager;
 using error_messages;
 
 namespace habit_tracker
@@ -13,12 +12,6 @@ namespace habit_tracker
             {
                 Console.WriteLine("No habits found.");
                 return null;
-            }
-
-            Console.WriteLine("\nAvailable Habits:");
-            for (int i = 0; i < habits.Count; i++)
-            {
-                Console.WriteLine($"{i + 1}: {habits[i].Name} - Unit: {habits[i].Type}");
             }
 
             Console.WriteLine("\nSelect a habit by number (0 to return to main menu): ");

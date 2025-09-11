@@ -1,6 +1,7 @@
 using System;
 using habit_tracker;
 using menu_manager;
+using error_messages;
 
 namespace sql_management
 {
@@ -18,7 +19,7 @@ namespace sql_management
 
             SQLDatabaseHelper.ExecuteNonQuery(
                 connectionString,
-                $"INSERT INTO [{tableName}](Date, Quantity, Type) VALUES (@Date, @Quantity, @type);",
+                $"INSERT INTO [{tableName}](date, quantity, type) VALUES (@Date, @Quantity, @type);",
                 cmd =>
                 {
                     cmd.Parameters.AddWithValue("@Date", date);
@@ -40,7 +41,7 @@ namespace sql_management
 
             SQLDatabaseHelper.ExecuteNonQuery(
                 connectionString,
-                $"INSERT INTO habits(Name, Type, TableName) VALUES (@name, @type, @tableName);",
+                $"INSERT INTO habits(name, type, tableName) VALUES (@name, @type, @tableName);",
                 cmd =>
                 {
                     cmd.Parameters.AddWithValue("@name", name);
@@ -48,7 +49,8 @@ namespace sql_management
                     cmd.Parameters.AddWithValue("@tableName", tableName);
                 }
             );
+            
             SQLGenerator.GenerateSQLTable(connectionString, tableName);
         }
-    }  
+    }
 }

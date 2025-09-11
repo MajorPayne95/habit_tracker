@@ -1,4 +1,5 @@
 using System;
+using error_messages;
 using Microsoft.Data.Sqlite;
 
 namespace sql_management
@@ -7,44 +8,62 @@ namespace sql_management
     {
         public static void GenerateSQLTable(string connectionString, string tableName)
         {
-            using (var connection = new SqliteConnection(connectionString))
+            try
             {
-                connection.Open();
-                var tableCmd = connection.CreateCommand();
+                using (var connection = new SqliteConnection(connectionString))
+                {
+                    connection.Open();
+                    var tableCmd = connection.CreateCommand();
 
-                tableCmd.CommandText =
-                    $@"CREATE TABLE IF NOT EXISTS [{tableName}] (
+                    tableCmd.CommandText =
+                        $@"CREATE TABLE IF NOT EXISTS [{tableName}] (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        Data TEXT,
-                        Quantity INTEGER,
-                        Type TEXT
+                        date TEXT,
+                        quantity INTEGER,
+                        type TEXT
                         );";
 
-                tableCmd.ExecuteNonQuery();
+                    tableCmd.ExecuteNonQuery();
 
-                connection.Close();
+                    connection.Close();
+                }
             }
+            catch (Exception ex)
+            {
+                DisplayError.ErrorMessage($"Error generating SQL table: {ex.Message}");
+                throw;
+            }
+
         }
 
         public static void GenerateHabitTable(string connectionString)
         {
-            using (var connection = new SqliteConnection(connectionString))
+            try
             {
-                connection.Open();
-                var tableCmd = connection.CreateCommand();
+                using (var connection = new SqliteConnection(connectionString))
+                {
+                    connection.Open();
+                    var tableCmd = connection.CreateCommand();
 
-                tableCmd.CommandText =
-                    @"CREATE TABLE IF NOT EXISTS habits (
+                    tableCmd.CommandText =
+                        @"CREATE TABLE IF NOT EXISTS habits (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        Name TEXT NOT NULL,
-                        Type TEXT NOT NULL,
-                        TableName TEXT NOT NULL UNIQUE
+                        name TEXT NOT NULL,
+                        type TEXT NOT NULL,
+                        tableName TEXT NOT NULL UNIQUE
                         );";
 
-                tableCmd.ExecuteNonQuery();
+                    tableCmd.ExecuteNonQuery();
 
-                connection.Close();
+                    connection.Close();
+                }
             }
+            catch (Exception ex)
+            {
+                DisplayError.ErrorMessage($"Error generating habit table: {ex.Message}");
+                throw;
+            }
+
         }
     }
 }

@@ -27,8 +27,8 @@ namespace menu_manager
             Console.WriteLine("0. Return to Main Menu.");
             Console.WriteLine("1. View All Records.");
             Console.WriteLine("2. Insert Record.");
-            Console.WriteLine("3. Delete Record.");
-            Console.WriteLine("4. Update Record.");
+            Console.WriteLine("3. Update Record.");
+            Console.WriteLine("4. Delete Record.");
             Console.Write("-----------------------------------\n");
         }
 
@@ -65,16 +65,6 @@ namespace menu_manager
         public static void DeleteMenu()
         {
             Console.WriteLine("\n\nPlease select the index number of the record you would like to delete:  Press 0 to return to main menu\n\n");
-        }
-
-        public static void PrintTableData(List<DrinkingWater> tableData)
-        {
-            Console.WriteLine("------------------------------------");
-            foreach (var dw in tableData)
-            {
-                Console.WriteLine($"{dw.Id} - {dw.Date:MMM-dd-yyyy} - Quantity: {dw.Quantity}, Type: {dw.Type}");
-            }
-            Console.WriteLine("------------------------------------");
-        }        
+        }     
     }
 }

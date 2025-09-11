@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Data.Sqlite;
+using error_messages;
 
 namespace sql_management
 {
@@ -14,23 +15,31 @@ namespace sql_management
         {
             var results = new List<T>();
 
-            using (var connection = new SqliteConnection(connectionString))
+            try
             {
-                connection.Open();
-                var command = connection.CreateCommand();
-                command.CommandText = sql;
-
-                parameterize?.Invoke(command);
-
-                using (var reader = command.ExecuteReader())
+                using (var connection = new SqliteConnection(connectionString))
                 {
-                    while (reader.Read())
+                    connection.Open();
+                    var command = connection.CreateCommand();
+                    command.CommandText = sql;
+
+                    parameterize?.Invoke(command);
+
+                    using (var reader = command.ExecuteReader())
                     {
-                        results.Add(mapFunction(reader));
-                        Console.WriteLine($"{reader.GetInt32(0)} | {reader.GetString(1)} | {reader.GetString(2)} | {reader.GetString(3)}");
+                        while (reader.Read())
+                        {
+                            results.Add(mapFunction(reader));
+                            Console.WriteLine($"{reader.GetInt32(0)} | {reader.GetString(1)} | {reader.GetString(2)} | {reader.GetString(3)}");
+                        }
+                        return results;
                     }
-                    return results;
                 }
+            }
+            catch (Exception ex)
+            {
+                DisplayError.ErrorMessage("Database query error: " + ex.Message);
+                throw;
             }
         }
 
@@ -58,23 +67,43 @@ namespace sql_management
                 .ToLower()
                 .Replace(' ', '_')
                 .ToCharArray());
-            safe = System.Text.RegularExpressions.Regex.Replace(safe, @"[^a-z0-9_]", "");
+
+            try
+            {
+                safe = System.Text.RegularExpressions.Regex.Replace(safe, @"[^a-z0-9_]", "");
+            }
+            catch (Exception ex)
+            {
+                DisplayError.ErrorMessage($"Error generating table name: {ex.Message}");
+                throw;
+            }
+
             return $"habit_{safe}_{Guid.NewGuid().ToString("N").Substring(0, 8)}";
         }
 
         public static string? GetHabitType(string connectionString, string tableName)
         {
             string? type = null;
-            using (var connection = new SqliteConnection(connectionString))
+            try
             {
-                connection.Open();
-                var cmd = connection.CreateCommand();
-                cmd.CommandText = "SELECT Type FROM habits WHERE TableName = @tableName;";
-                cmd.Parameters.AddWithValue("@tableName", tableName);
-                var result = cmd.ExecuteScalar();
-                if (result != null && result != DBNull.Value)
-                    type = result.ToString();
+                using (var connection = new SqliteConnection(connectionString))
+                {
+                    connection.Open();
+                    var cmd = connection.CreateCommand();
+                    cmd.CommandText = "SELECT Type FROM habits WHERE TableName = @tableName;";
+                    cmd.Parameters.AddWithValue("@tableName", tableName);
+                    var result = cmd.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                        type = result.ToString();
+                }
             }
+            catch (Exception ex)
+            {
+                DisplayError.ErrorMessage($"Error retrieving habit type: {ex.Message}");
+                throw;
+            }
+
+
             return type;
         }
     }

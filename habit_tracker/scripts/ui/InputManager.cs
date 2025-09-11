@@ -9,6 +9,9 @@ namespace habit_tracker
         public static string GetUserInput()
         {
             string? input = Console.ReadLine();
+            if (input == null) GetUserInput();
+
+            if (input == ".test") return ".test";
 
             while (!int.TryParse(input, out _) || Convert.ToInt32(input) < 0)
             {
@@ -22,6 +25,7 @@ namespace habit_tracker
         public static string GetDateInput()
         {
             string? date = Console.ReadLine();
+            if (date == null) GetDateInput();
 
             if (date == "0") GetDateInput();
 
@@ -37,6 +41,7 @@ namespace habit_tracker
         public static string GetHabitInput()
         {
             string? name = Console.ReadLine();
+            if (name == null) GetHabitInput();
 
             while (string.IsNullOrWhiteSpace(name))
             {
@@ -50,6 +55,7 @@ namespace habit_tracker
         public static string GetHabitSelection()
         {
             string? choice = Console.ReadLine();
+            if (choice == null) GetHabitSelection();
 
             while (string.IsNullOrWhiteSpace(choice))
             {

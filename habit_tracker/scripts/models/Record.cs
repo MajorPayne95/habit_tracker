@@ -2,7 +2,7 @@ using System;
 
 namespace models
 {
-    public class DrinkingWater
+    public class Record
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }

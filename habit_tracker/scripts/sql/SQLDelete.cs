@@ -1,6 +1,7 @@
 using System;
 using habit_tracker;
 using menu_manager;
+using error_messages;
 
 namespace sql_management
 {
@@ -14,12 +15,21 @@ namespace sql_management
 
             MenuManager.DeleteMenu();
             var recordId = Convert.ToInt32(InputManager.GetUserInput());
+            if (recordId == 0) return;
 
-            SQLDatabaseHelper.ExecuteNonQuery(
-                connectionString,
-                $"DELETE FROM [{tableName}] WHERE Id = @Id;",
-                cmd => cmd.Parameters.AddWithValue("@Id", recordId)
-            );
+            try
+            {
+                SQLDatabaseHelper.ExecuteNonQuery(
+                    connectionString,
+                    $"DELETE FROM [{tableName}] WHERE Id = @Id;",
+                    cmd => cmd.Parameters.AddWithValue("@Id", recordId)
+                );
+            }
+            catch (Exception ex)
+            {
+                DisplayError.ErrorMessage("An error occurred while deleting the record: " + ex.Message);
+                throw;
+            }
         }
 
         public static void DeleteHabit(string connectionString)
@@ -30,12 +40,21 @@ namespace sql_management
 
             MenuManager.DeleteMenu();
             var habitId = Convert.ToInt32(InputManager.GetUserInput());
+            if (habitId == 0) return;
 
-            SQLDatabaseHelper.ExecuteNonQuery(
-                connectionString,
-                $"DELETE FROM habits WHERE Id = @Id;",
-                cmd => cmd.Parameters.AddWithValue("@Id", habitId)
-            );
+            try
+            {
+                SQLDatabaseHelper.ExecuteNonQuery(
+                    connectionString,
+                    $"DELETE FROM Habits WHERE Id = @Id;",
+                    cmd => cmd.Parameters.AddWithValue("@Id", habitId)
+                );
+            }
+            catch (Exception ex)
+            {
+                DisplayError.ErrorMessage("An error occurred while deleting the habit: " + ex.Message);
+                throw;
+            }
         }
     }  
 }
