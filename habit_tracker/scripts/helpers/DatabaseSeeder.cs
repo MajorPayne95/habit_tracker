@@ -1,5 +1,6 @@
 using System;
-using Microsoft.Data.Sqlite;
+using System.Globalization;
+using sql_management;
 
 namespace sql_management
 {
@@ -7,62 +8,43 @@ namespace sql_management
     {
         public static void Seed(string connectionString)
         {
-            using (var connection = new SqliteConnection(connectionString))
+            var habits = new[]
             {
-                connection.Open();
-                var command = connection.CreateCommand();
+                new { Name = "Drink Water", Type = "fl oz", TableName = "drinking_water" },
+                new { Name = "Exercise", Type = "calories", TableName = "exercise" },
+                new { Name = "Read Book", Type = "count", TableName = "reading" }
+            };
 
-                var startDate = new DateTime(1990, 01, 01);
+            var rand = new Random();
 
-                var habits = new[]
+            foreach (var habit in habits)
+            {
+                try
                 {
-                    new { Name = "Drink Water", Type = "fl oz", TableName = "drinking_water" },
-                    new { Name = "Exercise", Type = "calories", TableName = "exercise" },
-                    new { Name = "Read Book", Type = "count", TableName = "reading" }
-                };
+                    // Use your SQLCreate method to create the habit and its table
+                    SQLCreate.InsertHabit(connectionString, habit.Name, habit.Type, habit.TableName);
 
-                foreach (var habit in habits)
-                {
-                    command.CommandText = @"
-                        INSERT OR IGNORE INTO habits (name, type, tablename)
-                        VALUES ($name, $type, $tableName);
-                    ";
-                    command.Parameters.Clear();
-                    command.Parameters.AddWithValue("$name", habit.Name);
-                    command.Parameters.AddWithValue("$type", habit.Type);
-                    command.Parameters.AddWithValue("$tableName", habit.TableName);
-                    command.ExecuteNonQuery();
-
-                    // Create corresponding table if it doesn't exist
-                    command.CommandText = $@"
-                        CREATE TABLE IF NOT EXISTS [{habit.TableName}] (
-                            id INTEGER PRIMARY KEY AUTOINCREMENT,
-                            date TEXT NOT NULL,
-                            quantity INTEGER NOT NULL,
-                            type TEXT NOT NULL
-                        );
-                    ";
-                    command.Parameters.Clear();
-                    command.ExecuteNonQuery();
-
-                    // Seed 10 records for each habit
-                    for (int i = 0; i < 10; i++)
+                    // Insert 10 records with random dates and quantities
+                    for (int i = 0; i < 200; i++)
                     {
-                        int random = new Random().Next(1, 18250);
-                        var date = startDate.AddDays(random).ToString("MM-dd-yy");
-                        var quantity = (i + 1) * random; // Example quantity
-                        command.CommandText = $@"
-                            INSERT INTO [{habit.TableName}] (date, quantity, type)
-                            VALUES ($date, $quantity, $type);
-                        ";
-                        command.Parameters.Clear();
-                        command.Parameters.AddWithValue("$date", date);
-                        command.Parameters.AddWithValue("$quantity", quantity);
-                        command.Parameters.AddWithValue("$type", habit.Type);
-                        command.ExecuteNonQuery();
+                        // Random date in the last 30 days
+                        var date = DateTime.Now.AddDays(-rand.Next(0, 9125));
+                        string dateStr = date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+
+                        // Random quantity between 10 and 100
+                        int quantity = rand.Next(10, 101);
+
+                        // Use your SQLCreate method to insert the record
+                        SQLCreate.InsertRecord(connectionString, habit.TableName, dateStr, quantity, habit.Type);
                     }
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error seeding habit '{habit.Name}': {ex.Message}");
+                }
             }
+
+            Console.WriteLine("Database seeded with sample habits and records.");
         }
     }
 }
