@@ -1,16 +1,15 @@
-using System;
 using habit_tracker;
 using menu_manager;
 using error_messages;
 
 namespace sql_management
 {
-    public class SQLDelete
+    public class SqlDelete
     {
         public static void DeleteRecord(string connectionString, string tableName)
         {
             Console.Clear();
-            SQLRead sqlRead = new SQLRead(connectionString);
+            SqlRead sqlRead = new SqlRead(connectionString);
             sqlRead.ViewAllRecords(tableName);
 
             MenuManager.DeleteMenu();
@@ -19,7 +18,7 @@ namespace sql_management
 
             try
             {
-                SQLDatabaseHelper.ExecuteNonQuery(
+                SqlDatabaseHelper.ExecuteNonQuery(
                     connectionString,
                     $"DELETE FROM [{tableName}] WHERE Id = @Id;",
                     cmd => cmd.Parameters.AddWithValue("@Id", recordId)
@@ -35,7 +34,7 @@ namespace sql_management
         public static void DeleteHabit(string connectionString)
         {
             Console.Clear();
-            SQLRead sqlRead = new SQLRead(connectionString);
+            SqlRead sqlRead = new SqlRead(connectionString);
             sqlRead.ViewAllHabits();
 
             MenuManager.DeleteMenu();
@@ -44,7 +43,7 @@ namespace sql_management
 
             try
             {
-                SQLDatabaseHelper.ExecuteNonQuery(
+                SqlDatabaseHelper.ExecuteNonQuery(
                     connectionString,
                     $"DELETE FROM Habits WHERE Id = @Id;",
                     cmd => cmd.Parameters.AddWithValue("@Id", habitId)

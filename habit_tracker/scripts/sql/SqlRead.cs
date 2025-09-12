@@ -1,15 +1,14 @@
-using System;
 using models;
 using error_messages;
 
 
 namespace sql_management
 {
-    public class SQLRead
+    public class SqlRead
     {
         private readonly string _connectionString;
 
-        public SQLRead(string connectionString)
+        public SqlRead(string connectionString)
         {
             _connectionString = connectionString;
         }
@@ -18,7 +17,7 @@ namespace sql_management
         {
             try
             {
-                return SQLDatabaseHelper.ExecuteQuery(
+                return SqlDatabaseHelper.ExecuteQuery(
                    _connectionString,
                    $"SELECT * FROM [{tableName}];",
                    reader => new Record
@@ -41,7 +40,7 @@ namespace sql_management
         {
             try
             {
-                return SQLDatabaseHelper.ExecuteQuery(
+                return SqlDatabaseHelper.ExecuteQuery(
                     _connectionString,
                     "SELECT * FROM habits;",
                     reader => new Habit

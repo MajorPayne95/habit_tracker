@@ -1,18 +1,17 @@
-using System;
 using habit_tracker;
 using menu_manager;
 using error_messages;
 
 namespace sql_management
 {
-    public class SQLCreate
+    public class SqlCreate
     {
         // ✅ Low-level habit insert with error handling
         public static void InsertHabit(string connectionString, string name, string type, string tableName)
         {
             try
             {
-                SQLDatabaseHelper.ExecuteNonQuery(
+                SqlDatabaseHelper.ExecuteNonQuery(
                     connectionString,
                     $"INSERT INTO habits(name, type, tableName) VALUES (@name, @type, @tableName);",
                     cmd =>
@@ -23,7 +22,7 @@ namespace sql_management
                     }
                 );
 
-                SQLGenerator.GenerateSQLTable(connectionString, tableName);
+                SqlGenerator.GenerateSqlTable(connectionString, tableName);
 
                 Console.WriteLine($"Habit '{name}' created successfully with table '{tableName}'.");
             }
@@ -38,7 +37,7 @@ namespace sql_management
         {
             try
             {
-                SQLDatabaseHelper.ExecuteNonQuery(
+                SqlDatabaseHelper.ExecuteNonQuery(
                     connectionString,
                     $"INSERT INTO [{tableName}] (date, quantity, type) VALUES (@Date, @Quantity, @Type);",
                     cmd =>
@@ -69,7 +68,7 @@ namespace sql_management
                 MenuManager.HabitTypeMenu();
                 string type = InputManager.GetHabitInput();
 
-                string tableName = SQLDatabaseHelper.GenerateTableName(name);
+                string tableName = SqlDatabaseHelper.GenerateTableName(name);
 
                 InsertHabit(connectionString, name, type, tableName);
             }
@@ -96,7 +95,7 @@ namespace sql_management
                     return;
                 }
 
-                string type = SQLDatabaseHelper.GetHabitType(connectionString, tableName) ?? "units";
+                string type = SqlDatabaseHelper.GetHabitType(connectionString, tableName) ?? "units";
 
                 InsertRecord(connectionString, tableName, date, quantity, type);
             }

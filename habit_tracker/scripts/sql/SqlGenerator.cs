@@ -4,9 +4,9 @@ using Microsoft.Data.Sqlite;
 
 namespace sql_management
 {
-    public class SQLGenerator
+    public class SqlGenerator
     {
-        public static void GenerateSQLTable(string connectionString, string tableName)
+        public static void GenerateSqlTable(string connectionString, string tableName)
         {
             try
             {

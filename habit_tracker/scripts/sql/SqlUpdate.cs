@@ -1,16 +1,15 @@
-using System;
 using habit_tracker;
 using menu_manager;
 using error_messages;
 
 namespace sql_management
 {
-    public class SQLUpdate
+    public class SqlUpdate
     {
         public static void UpdateRecord(string connectionString, string tableName)
         {
             Console.Clear();
-            SQLRead sqlRead = new SQLRead(connectionString);
+            SqlRead sqlRead = new SqlRead(connectionString);
             sqlRead.ViewAllRecords(tableName);
 
             MenuManager.UpdateMenu();
@@ -25,7 +24,7 @@ namespace sql_management
 
             try
             {
-                SQLDatabaseHelper.ExecuteNonQuery(
+                SqlDatabaseHelper.ExecuteNonQuery(
                     connectionString,
                     $"UPDATE [{tableName}] SET date = @Date, quantity = @Quantity WHERE Id =@Id;",
                     cmd =>
@@ -46,7 +45,7 @@ namespace sql_management
         public static void UpdateHabit(string connectionString)
         {
             Console.Clear();
-            SQLRead sqlRead = new SQLRead(connectionString);
+            SqlRead sqlRead = new SqlRead(connectionString);
             sqlRead.ViewAllHabits();
 
             MenuManager.UpdateMenu();
@@ -61,7 +60,7 @@ namespace sql_management
 
             try
             {
-                SQLDatabaseHelper.ExecuteNonQuery(
+                SqlDatabaseHelper.ExecuteNonQuery(
                     connectionString,
                     $"UPDATE habits SET name = @Name, type = @Type WHERE Id =@Id;",
                     cmd =>
