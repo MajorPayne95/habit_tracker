@@ -19,7 +19,7 @@ habit_tracker/
 ├── habit_tracker.csproj      # Project file
 ├── scripts/
 │   ├── helpers/              # Database helpers and seeders
-│   ├── models/               # Data models (Habit, DrinkingWater)
+│   ├── models/               # Data models (Habit, Record)
 │   ├── sql/                  # SQL CRUD operations
 │   └── ui/                   # Console UI and input management
 ├── habit-Tracker.db          # SQLite database file
